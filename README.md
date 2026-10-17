@@ -1,0 +1,272 @@
+# Tekken 5: Dark Resurrection Online — native Windows port
+
+Tekken 5: Dark Resurrection (PS3, PlayStation Network release) running natively
+on Windows. It is recompiled, not emulated. Online play between friends is
+being built.
+
+**Test release 0.1.3-preview (2026-10-17).** Download
+`T5DR-Online-0.1.3-preview.zip` from https://github.com/TheWishin/T5DROnline/releases
+
+**Offline play is ready:** all modes, 60 fps, Xbox pad and arcade stick tested.
+**Online is in a test phase:** it works on one PC and through the lobby server;
+the first matches between two players' PCs are being played now.
+
+**Test release. Expect bugs.** Please report them (see "Bug reports" below).
+
+Deutsch: `docs\README.de.md` in this folder.
+
+## What is this?
+
+- The PS3 game's program is translated to C++ ahead of time (static
+  recompilation) and compiled into a normal Windows program. No emulator runs.
+- The model is the same as
+  [Tekken 6 Native Online](https://github.com/Ekspym/Tekken6-native-online).
+  This repository and its releases contain **no part of the game**.
+- You build the game on your own PC from **your own copy**: the PSN package
+  (`.pkg`) and the license (`.rap`) from your own account. The launcher does
+  this for you.
+- Online play between friends works like Tekken 6 Native Online: log in (or
+  play as a guest) in the launcher's Online tab, find an opponent, and the game
+  starts directly in the fight. See "Online".
+
+## Status (2026-10-17)
+
+Tested on one development PC (Windows 11, 16-core Ryzen 9, RTX 3090). A run on a
+clean PC and a match between two real PCs over the internet are still to come.
+
+| Area | State |
+|---|---|
+| Start-up | Works. Boots, opens the window, reaches the title, menus, character select and fights. |
+| Menus, fights | 60 fps, also with other programs busy on the PC. Weaker PCs are not measured yet. |
+| Game modes | Arcade, Ghost, Versus (two players on one PC), Survival and Practice work. Gallery needs PSN and fails cleanly offline. |
+| Fighters, stages | Render correctly. Faces and floor shadows are fixed. Some background figures may still look flat white. |
+| Display | Resizable window, borderless fullscreen (Alt+Enter or F11), higher render resolutions (`PS3_RES_SCALE`). |
+| Music, sound effects, movies | Work. |
+| Controls | Keyboard, Xbox pads (XInput), PlayStation pads, arcade sticks and hitboxes (DirectInput), two local players, `controls.ini` for remapping. Short taps are never lost. Tried by a person: an Xbox pad and an arcade stick, every input came through, smooth. |
+| Saving | Works. The in-game clock shows the real date. |
+| Long sessions | The old memory bug (white screen after a few trips through the title) is fixed. |
+| Online play | Works on one PC and through the public lobby server. Rollback netcode (2 frames of input delay, tested at 0/50/150 ms ping with packet loss). Not yet played between two real PCs over the internet. |
+| Build from your copy | Works on the development PC. |
+
+## Requirements
+
+- Windows 10 or 11, 64-bit.
+- A graphics card with DirectX 12, and a 64-bit CPU with SSE4.1 (practically
+  every PC of the last 10+ years).
+- RAM: the game used about 1.2 GB on the development PC. We have not tested
+  small PCs. 8 GB or more is a safe guess.
+- About 1.5 GB of free disk space. After the build it uses about 1.1 GB, plus
+  the 90 MB zip.
+- An internet connection during the first build. About 50 KB of public key data
+  (two text files) is fetched from github.com. Nothing about you or your game is
+  sent.
+- **Your own copy** of the game, exactly this one:
+  **TEKKEN 5 DARK RESURRECTION ONLINE, US PSN, `NPUB30009`, version 01.00**.
+  - the package: `.pkg`, 619,430,240 bytes
+  - the license: `.rap` (16 bytes), named
+    `UP0700-NPUB30009_00-UPDATE0000010000.rap`
+  - **Other versions are refused** (disc copies, other regions, other
+    versions). The port is tied to this exact program.
+
+You do **not** need Visual Studio, Git or Python. The zip brings its own Python
+and its own compiler (clang-cl and lld-link from LLVM). The game's runtime comes
+precompiled. Your PC only translates and compiles the code from your copy.
+
+## Install and first build
+
+1. Download the zip (`T5DR-Online-<version>.zip`, about 90 MB) from the
+   Releases page: https://github.com/TheWishin/T5DROnline/releases
+2. Extract **everything** into its own folder, for example `C:\T5DR`. Not into
+   Program Files. Not from inside the zip viewer.
+3. Start `T5DR Online.exe`. Windows may warn once (SmartScreen: the file is not
+   signed). Click "More info", then "Run anyway".
+4. **Build** tab: choose your `.pkg` and `.rap`. The launcher also looks in
+   Downloads, Desktop and Documents. Both lines should get a green check.
+5. Click **BUILD GAME**. The launcher:
+   - checks your copy (a wrong version or wrong `.rap` is refused within
+     seconds),
+   - unpacks it into the `native` folder,
+   - translates the game's code and compiles it on your PC.
+
+   Time: about 90 seconds on the development PC (16 cores). On a typical PC we
+   expect a few minutes (estimate, not measured). **Cancel** is safe: BUILD GAME
+   continues where it stopped.
+6. **Play** tab: type a name (optional) and click **PLAY**.
+
+Everything the build makes stays in the `native` folder next to the launcher.
+It is game data. Do not share it. To uninstall, delete the whole folder.
+
+## Playing
+
+- The game opens in its own window. It draws at 1280 x 720 and scales to the
+  window. **Settings** has window sizes, maximized, borderless (experimental:
+  not yet tested with the real game window) and mute.
+- **Esc** closes the game. The **Stop game** button does too.
+- Two players on one PC: connect a second pad, then choose Versus.
+- Tips for now:
+  - Go back to the title screen as little as you can (memory bug).
+  - Do not leave the game idle at the title.
+  - Do not use the game's own **Online** menu entry (see "Online").
+
+## Controls
+
+Keyboard (default) and Xbox controller:
+
+| Action | Keyboard | Xbox pad |
+|---|---|---|
+| Move, menus | Arrow keys | D-pad, left stick |
+| Left punch (1) | A | X |
+| Right punch (2) | S | Y |
+| Left kick (3) | Z | A |
+| Right kick (4) | X | B |
+| L1 / R1 | Q / W | LB / RB |
+| L2 / R2 | 1 / 2 | LT / RT |
+| Start | Enter | Start |
+| Select | Tab | Back |
+| Quit the game | Esc | |
+
+- The keyboard works only while the game window has the focus. Pads work even
+  when it does not.
+- Keyboard and the first pad both drive player 1.
+- PlayStation pads (DualShock 4, DualSense), arcade sticks and hitboxes are read
+  through DirectInput. Nothing to install. An arcade stick was tried on real
+  hardware: every input came through.
+- Pads can be plugged in or out while the game runs.
+- In the launcher's Online tab a pad or stick runs the lobby without mouse or
+  keyboard: A / Cross accepts, rematches and searches, B / Circle declines and
+  stops. Only while the launcher is in front. See "Controller in the launcher"
+  in `docs\ONLINE.md` (in the release zip)
+- To change keys or buttons, make a `controls.ini`. The documented sample with
+  every default is `docs\controls.ini` in this folder.
+  Put your file at `native\controls.ini` and restart the game.
+  Examples (from the sample):
+  - `[keys1]` / `preset = tekken` -- WASD to move, U I J K for the buttons.
+  - Two players on one keyboard: `[keys1] preset = tekken` and
+    `[keys2] preset = numpad`.
+  - `1+2 = O` -- one key for two buttons.
+- The game's own Options menu can also change the button layout.
+- A test zip made before 2026-10-16 evening has only the keyboard and Xbox pads.
+  `controls.ini` and DirectInput came later.
+
+## Online
+
+1. Start the launcher and open the **Online** tab. The public server
+   "T5DR Online" is preselected.
+2. Click **Play as guest**, or **Log in**. Ranked needs an account: create one in
+   the tab and keep the recovery codes it shows.
+3. Search a **quick** or **ranked** match, or open a lobby room for a friend.
+   When an opponent is found you see the ping and accept within 15 seconds.
+4. The game starts directly in the fight: first to 3 rounds. Afterwards pick
+   **Rematch** or **Next game**. The game stays open between matches.
+
+Good to know:
+
+- The two PCs send each other the controller inputs directly. If their routers
+  don't allow that, the lobby server relays them. With a direct connection each
+  PC learns the other's IP address.
+- A cable is better than Wi-Fi.
+- The first time, Windows Firewall asks whether the game and Python may use the
+  network. Allow it for **private networks**.
+- Netcode: rollback, like Tekken 6 Native Online (2 frames of input delay at any
+  ping). If a match stutters on a slow PC, one player can switch to delay
+  netcode: Settings -> "Advanced: extra settings" -> `T5_RB_MODE=off`.
+- Ranked uses a Glicko-2 rating shown with Tekken 5's own rank names. Leaving or
+  disconnecting counts as a loss. A desync voids the match.
+- More in `docs\ONLINE.md` (in the release zip) and `docs\RANKED.md` (in the release zip).
+
+Do not use the game's own **Online** menu entry. Sony's servers are gone. After
+the terms screen it crashes (known).
+
+You can run your own server: on a small Linux VPS, with Docker, on a Mac, or
+with **Host for friends** in the launcher. See `docs\HOSTING.md` (in the release zip).
+
+## Updating
+
+1. Extract the new release into a **new** folder.
+2. Copy your old `native` folder into it. This keeps the unpacked game and your
+   saves.
+3. Start the launcher. If the new version changes the game code, the Play tab
+   says so. Click **BUILD GAME** again. Only the code is rebuilt.
+
+## Bug reports
+
+Please send:
+
+- Build problems: `native\build.log` (Build tab, **Open build.log**). It is
+  overwritten by each build, so copy it before you build again.
+- Game problems: the newest file in `native\logs\` (Play tab, **Open newest game
+  log**). The last 10 logs are kept.
+- Your Windows version, graphics card and driver, and what you did just before.
+
+Open an issue at https://github.com/TheWishin/T5DROnline/issues and attach the
+files.
+
+The logs contain no game data and no keys. They do contain folder paths, which
+can include your Windows user name. Look before you post them in public.
+
+More help: `docs\TROUBLESHOOTING.md` in this folder.
+
+## FAQ
+
+**Do I need a PS3 or RPCS3?** No. You need the `.pkg` and `.rap` of your own
+purchase. RPCS3 is not used or installed.
+
+**Can I use a disc copy, the EU/JP version or another version?** No. Only
+NPUB30009 version 01.00. The builder refuses everything else.
+
+**Where can I get the game?** From your own PlayStation Network account. We do
+not provide the package or the license and cannot help to get them.
+
+**Does it run on Linux or macOS?** No. Only Windows runs a recompiled title
+today.
+
+**Why does the build need the internet?** Once, to fetch about 50 KB of public
+key data from github.com (see Credits).
+
+**Why is Windows warning me about the launcher?** `T5DR Online.exe` is a tiny
+unsigned starter. Code signing is not set up yet.
+
+**Where are my saves?** In `native\gamedata`. The Play tab has an **Open saves
+folder** button. Back it up before you experiment.
+
+**Is the PSN "Online" mode coming back?** No. The servers are gone. Online play
+will use our own lobby.
+
+**How do I uninstall?** Delete the folder.
+
+## Credits
+
+- **[ps3recomp](https://github.com/sp00nznet/ps3recomp)** by Ned Heller
+  (sp00nznet) and contributors (MIT). It lifts the PS3 code and provides the
+  runtime libraries: D3D12 graphics, WASAPI audio, XInput pads. We build against
+  **NoahBPeterson's branch** `infamous/upstream-sync`
+  (https://github.com/NoahBPeterson/ps3recomp), pinned at commit `f17bcd3`, plus
+  our patches in `patches/ps3recomp/`.
+- **[Tekken 6 Native Online](https://github.com/Ekspym/Tekken6-native-online)**
+  by Ekspym. The inspiration for how this project works: a build-it-yourself
+  launcher, a lobby and rollback netcode.
+- **RPCS3** -- we never run or install it. We followed its open source as a
+  reference for the PS3 package and license (NPDRM) decryption. The build also
+  downloads two public text files from its repository (`rpcs3/Crypto/key_vault.h`
+  and `key_vault.cpp`) to read the public key tables from them.
+- The ATRAC3plus music decoder is FFmpeg's, via PPSSPP's `at3_standalone`
+  (LGPL-2.1 or later), as vendored by ps3recomp.
+- Movies are decoded with Windows Media Foundation.
+- The release zip also carries Python (PSF license) and LLVM clang-cl / lld-link
+  (Apache-2.0 with LLVM exception). Their license texts are in `LICENSES\`.
+- The game itself is the work of Bandai Namco and the original Tekken team.
+
+## Legal
+
+No Sony or Namco code, keys or assets are in this repository or in a release.
+You must own the game. The game's program, its data, the translated code, the
+keys and your `.pkg` / `.rap` stay on your own PC. Git ignores them, and the
+project's CI runs a guard that fails on anything game-derived.
+
+This is a fan project. It is not affiliated with or endorsed by Bandai Namco
+Entertainment or Sony Interactive Entertainment. Tekken is a trademark of Bandai
+Namco. Rules about decrypting and converting games you own differ by country.
+You are responsible for following yours. This is not legal advice.
+
+This project's own code and docs are under the MIT License (`LICENSE`).
+ps3recomp is MIT-licensed too. The license covers none of the game.
