@@ -6,8 +6,8 @@ launcher's own lobby, like Tekken 6 Native Online.
 
 <!-- RELEASE LINE: the version and date in the next two lines change with every release, when it is tagged
 (docs/RELEASING.md "Cutting a release", step 2); the same lines are in docs/README.de.md. -->
-**Release 1.1.9 (2026-10-29).** Download
-`T5DR-Online-1.1.9.zip` from https://github.com/TheWishin/T5DROnline/releases
+**Release 1.2.0 (2026-11-04).** Download
+`T5DR-Online-1.2.0.zip` from https://github.com/TheWishin/T5DROnline/releases
 
 **Community Discord:** https://discord.gg/4DwDHAkk2x -- questions, matches, feedback.
 
@@ -381,7 +381,10 @@ Good to know:
 - Nobody can pause an online fight (from 1.1.2): **Start** does not open the
   pause menu there, for either player. From 1.1.4 the fighters' intros and the
   replay after a round are skipped once **both** players have pressed **Start**
-  during them (one player alone skips nothing).
+  during them (one player alone skips nothing). From 1.2.0 the fighters' intros
+  at the start of a match are skipped by themselves; the replay after a round
+  still needs both players' **Start**, or both players' tick at "Auto-skip
+  replays and round endings" in the Online tab (off by default).
   To quit a match, close the game (Esc twice): that counts as a loss, as before.
 - Ranked uses a Glicko-2 rating shown with Tekken 5's own rank names and, from
   1.1.4, the game's own rank plates (Beginner, 9th kyu ... Tekken Lord) next to
@@ -485,9 +488,11 @@ with **Host for friends** in the launcher. See `docs\HOSTING.md` (in the release
 
 The launcher offers new versions; click **Update**.
 
-- At start (at most once an hour) and with **Check for updates** at the top,
-  the launcher asks GitHub for the newest published release. It shows the
-  version, what is new and the download size.
+- At start and with **Check for updates** at the top, the launcher asks the
+  public lobby for the newest published release. If the lobby is unavailable
+  or has no release information (including older servers), it asks GitHub.
+  It shows the version, what is new and the download size. Downloads still
+  come from the project's GitHub releases and pass the same checks.
 - **Update now** downloads the zip (about 90 MB), checks it against the
   published SHA-256 checksum and (from 1.1.5) the release's signature by the
   project's release key, replaces the program files and starts the
